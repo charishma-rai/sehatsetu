@@ -1,0 +1,14 @@
+body {
+  margin: 0;
+}
+
+::selection {
+  background: #2f855a;
+  color: white;
+}
+
+@media (min-width: 640px) {
+  body {
+    background: #f8fafc;
+  }
+}
