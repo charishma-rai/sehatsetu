@@ -1,6 +1,6 @@
 import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import patients from "../patients";
+import useRiskSense from "../hooks/useRiskSense";
 
 const badgeStyles = {
   HIGH: 'bg-red-100 text-red-700',
@@ -22,9 +22,10 @@ export default function Home() {
     month: 'long',
   });
 
+  const { patients, loading, error } = useRiskSense();
   const ordered = useMemo(
     () => [...patients].sort((a, b) => b.riskScore - a.riskScore),
-    []
+    [patients]
   );
 
   return (
@@ -44,6 +45,18 @@ export default function Home() {
         <div className="mb-3 rounded-3xl bg-slate-100 p-4 text-sm text-slate-700">
           RiskSense priorities for today's ASHA visits. Tap a card to review the patient and start VisionCare.
         </div>
+
+        {loading && (
+          <div className="rounded-3xl bg-white p-5 text-sm text-slate-600 shadow-sm">
+            Fetching latest risk data from backend...
+          </div>
+        )}
+
+        {error && (
+          <div className="mb-3 rounded-3xl border border-amber-300 bg-amber-50 p-4 text-sm text-amber-800 shadow-sm">
+            Backend unavailable, showing local patients. Error: {error}
+          </div>
+        )}
 
         <div className="space-y-4">
           {ordered.map((patient) => (

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import patients from "../patients";
+import useRiskSense from "../hooks/useRiskSense";
 
 const riskStyles = {
   HIGH: 'border-red-500 text-red-700 bg-red-50',
@@ -11,9 +11,28 @@ const riskStyles = {
 export default function Patient() {
   const { id } = useParams();
   const navigate = useNavigate();
-  const patient = patients.find((item) => item.id === Number(id));
-  const [visited, setVisited] = useState(patient?.lastVisit === 'today');
+  const { patients, loading, error } = useRiskSense();
+  const patient = useMemo(
+    () => patients.find((item) => item.id === Number(id)),
+    [patients, id]
+  );
+  const [visited, setVisited] = useState(false);
   const [alertShown, setAlertShown] = useState(false);
+
+  useEffect(() => {
+    if (patient) {
+      setVisited(patient.lastVisit === 'today');
+    }
+  }, [patient]);
+
+  if (loading) {
+    return (
+      <div className="px-4 pt-10 text-center text-slate-700">
+        <div className="mb-4 text-5xl animate-pulse">⏳</div>
+        <p className="mb-4 text-lg font-semibold">Loading patient information...</p>
+      </div>
+    );
+  }
 
   if (!patient) {
     return (
