@@ -1,0 +1,16 @@
+{
+    "patients": [
+        {
+            "id": 1,
+            "name": "Rajesh Kumar",
+            "age": 65,
+            "diagnosis_code": "E11",
+            "bp_systolic": 155,
+            "spo2": 95,
+            "days_since_discharge": 25,
+            "missed_visits": 1,
+            "medication_adherence": 0.7,
+            "last_visit_gap_days": 35
+        }
+    ]
+}

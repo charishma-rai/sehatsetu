@@ -28,3 +28,8 @@ Thumbs.db
 
 # Test scripts
 backend/risksense/test_api.py
+
+# Large datasets and logs
+dataset anemia/
+brain/
+.gemini/
