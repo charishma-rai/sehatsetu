@@ -22,15 +22,9 @@ const SplashScreen = () => (
   </div>
 );
 
-// Stub components for new routes
-const Schedule = () => (
-  <div className="p-6">
-    <h2 className="text-xl font-bold mb-4">Visit Schedule</h2>
-    <div className="bg-teal-50 border border-teal-100 p-4 rounded-xl text-teal-800 text-sm">
-      Upcoming visits and vaccination reminders will appear here.
-    </div>
-  </div>
-);
+import Schedule from "./schedule";
+import Register from "./register";
+import Requests from "./requests";
 
 const Settings = () => (
   <div className="p-6">
@@ -77,6 +71,8 @@ function App() {
               <Route path="/risksense" element={<Dashboard />} />
               <Route path="/visioncare" element={<ScanScreen />} />
               <Route path="/schedule" element={<Schedule />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/requests" element={<Requests />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="*" element={<Navigate replace to="/dashboard" />} />
             </Routes>

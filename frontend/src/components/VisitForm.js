@@ -100,17 +100,41 @@ export default function VisitForm({ patient, onCancel, onSubmit }) {
         </section>
 
         {/* Maternal Section */}
-        {patient.is_pregnant === 1 && (
-          <section className="bg-teal-50/30 p-6 rounded-[32px] border border-teal-100/50">
-            <h3 className="text-[10px] font-black text-teal-700 uppercase tracking-widest mb-4">Maternal Health Tracking</h3>
+        {patient.type === 'maternal' && (
+          <section className="bg-pink-50/50 p-6 rounded-[32px] border border-pink-100 shadow-sm">
+            <h3 className="text-[10px] font-black text-pink-700 uppercase tracking-widest mb-4">Maternal Health Tracking</h3>
             <div className="space-y-4">
                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-teal-800">ANC Visit Completed?</span>
-                  <input type="checkbox" className="w-5 h-5 accent-teal-600" />
+                  <span className="text-xs font-bold text-pink-900">ANC Visit Completed?</span>
+                  <input type="checkbox" onChange={e => setFormData({...formData, anc_missed: e.target.checked ? 0 : 1})} className="w-5 h-5 accent-pink-600" />
                </div>
                <div className="flex items-center justify-between">
-                  <span className="text-xs font-bold text-teal-800">Iron Tablets Taken?</span>
-                  <input type="checkbox" className="w-5 h-5 accent-teal-600" defaultChecked />
+                  <span className="text-xs font-bold text-pink-900">Iron Tablets Taken?</span>
+                  <input type="checkbox" className="w-5 h-5 accent-pink-600" defaultChecked />
+               </div>
+            </div>
+          </section>
+        )}
+
+        {/* Child Section */}
+        {patient.type === 'child' && (
+          <section className="bg-blue-50/50 p-6 rounded-[32px] border border-blue-100 shadow-sm">
+            <h3 className="text-[10px] font-black text-blue-700 uppercase tracking-widest mb-4">Child Health Tracking</h3>
+            <div className="space-y-4">
+               <div className="flex items-center justify-between">
+                  <span className="text-xs font-bold text-blue-900">Immunization Complete?</span>
+                  <input type="checkbox" onChange={e => setFormData({...formData, immunization_overdue: e.target.checked ? 0 : 1})} className="w-5 h-5 accent-blue-600" />
+               </div>
+               <div className="flex gap-4">
+                 <div className="flex-1 space-y-1.5">
+                   <label className="text-[10px] font-bold text-blue-800">Fever Duration (Days)</label>
+                   <input type="number" onChange={e => setFormData({...formData, fever_days: parseInt(e.target.value) || 0})} className="w-full bg-white border border-blue-200 rounded-xl px-4 py-2 text-sm font-bold focus:outline-none" />
+                 </div>
+                 <div className="flex-1 space-y-1.5 flex flex-col justify-end pb-2">
+                   <label className="flex items-center gap-2 text-[10px] font-bold text-blue-800">
+                     <input type="checkbox" className="w-4 h-4 accent-blue-600" /> Severe Cough
+                   </label>
+                 </div>
                </div>
             </div>
           </section>

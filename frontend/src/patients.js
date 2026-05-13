@@ -16,9 +16,9 @@ const textStyles = {
   LOW: "text-emerald-600",
 };
 
-function Dashboard() {
+export default function Dashboard() {
   const navigate = useNavigate();
-  const { patients, loading, error } = usePatients();
+  const { patients, metrics, loading, error } = usePatients();
 
   const today = new Date().toLocaleDateString("en-US", {
     weekday: "long",
@@ -26,76 +26,75 @@ function Dashboard() {
     month: "long",
   });
 
-  const criticalCount = patients.filter((p) => p.level === "CRITICAL").length;
-  const highRiskCount = patients.filter((p) => p.level === "HIGH").length;
-
-  const tasks = [
-    { id: 1, title: "Register pregnant women", zone: "Zone A", status: "Pending" },
-    { id: 2, title: "ANC tracking (Meena Devi)", zone: "Rampur", status: "Overdue", urgent: true },
-    { id: 3, title: "Child immunization follow-up", zone: "Zone B", status: "Scheduled" },
-    { id: 4, title: "TB medication check", zone: "Sundarpur", status: "Pending" },
-  ];
-
   return (
-    <div className="flex flex-col min-h-screen bg-slate-50">
+    <div className="flex flex-col min-h-screen bg-slate-50 pb-24">
       {/* Header */}
       <header className="bg-teal-900 pt-10 pb-20 px-6 rounded-b-[40px] shadow-2xl shadow-teal-900/30 sticky top-0 z-10">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 bg-teal-800 rounded-xl flex items-center justify-center text-white font-bold text-lg border border-teal-700/50">S</div>
-            <span className="text-white font-bold text-lg tracking-tight">SehatSetu</span>
+            <div className="w-10 h-10 bg-teal-800 rounded-xl flex items-center justify-center text-white font-bold text-lg border border-teal-700/50 italic">S</div>
+            <span className="text-white font-black text-xl tracking-tight">SehatSetu</span>
           </div>
           <div className="flex items-center gap-3">
-             <div className="w-8 h-8 bg-teal-800/50 rounded-full flex items-center justify-center text-sm border border-teal-700/30">🔔</div>
-             <div className="w-10 h-10 bg-teal-700 rounded-full border-2 border-teal-500/30 flex items-center justify-center text-lg overflow-hidden shadow-inner">👤</div>
+             <button onClick={() => navigate('/requests')} className="relative w-10 h-10 bg-teal-800/50 rounded-full flex items-center justify-center text-lg border border-teal-700/30 hover:bg-teal-700 transition-colors">
+                🚑
+                <span className="absolute top-0 right-0 w-3 h-3 bg-red-500 rounded-full border-2 border-teal-900"></span>
+             </button>
+             <div className="w-10 h-10 bg-teal-700 rounded-full border-2 border-teal-500/30 flex items-center justify-center text-lg shadow-inner">👤</div>
           </div>
         </div>
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1 tracking-tight">Welcome, Lakshmi Singh</h1>
+          <h1 className="text-2xl font-black text-white mb-1 tracking-tight">Welcome, Lakshmi Singh</h1>
           <p className="text-teal-200/60 text-xs font-bold uppercase tracking-widest">{today}</p>
         </div>
       </header>
 
-      {/* Quick Stats */}
+      {/* Dynamic Metrics */}
       <div className="px-6 -mt-10 mb-8">
-        <div className="grid grid-cols-3 gap-3">
-          <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
-            <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Visits</span>
-            <span className="text-xl font-black text-slate-900">{patients.length}</span>
+        <div className="grid grid-cols-2 gap-3 mb-3">
+          <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col justify-center pl-6">
+            <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Total Patients</span>
+            <span className="text-3xl font-black text-slate-900">{metrics.total}</span>
           </div>
-          <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
-            <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Critical</span>
-            <span className="text-xl font-black text-red-600">{criticalCount}</span>
+          <div className="bg-red-50 p-4 rounded-3xl shadow-xl shadow-red-900/5 border border-red-100 flex flex-col justify-center pl-6">
+            <span className="text-red-400 text-[9px] font-black uppercase tracking-widest mb-1">High Risk / Critical</span>
+            <span className="text-3xl font-black text-red-600">{metrics.critical}</span>
           </div>
-          <div className="bg-white p-4 rounded-3xl shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col items-center text-center">
-            <span className="text-slate-400 text-[9px] font-black uppercase tracking-widest mb-1">Anemia</span>
-            <span className="text-xl font-black text-orange-500">2</span>
+        </div>
+        <div className="grid grid-cols-2 gap-3">
+          <div className="bg-emerald-50 p-4 rounded-3xl shadow-xl shadow-emerald-900/5 border border-emerald-100 flex flex-col justify-center pl-6">
+            <span className="text-emerald-500 text-[9px] font-black uppercase tracking-widest mb-1">Today's Visits</span>
+            <span className="text-xl font-black text-emerald-700">{metrics.today_visits}</span>
+          </div>
+          <div className="bg-orange-50 p-4 rounded-3xl shadow-xl shadow-orange-900/5 border border-orange-100 flex flex-col justify-center pl-6">
+            <span className="text-orange-500 text-[9px] font-black uppercase tracking-widest mb-1">Pending Follow-ups</span>
+            <span className="text-xl font-black text-orange-700">{metrics.pending_followups}</span>
           </div>
         </div>
       </div>
 
-      {/* Task List */}
+      {/* Action Hub */}
       <div className="px-6 mb-8">
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest">Today's Tasks</h2>
-          <button className="text-teal-600 text-xs font-bold">View Calendar</button>
-        </div>
-        <div className="flex gap-3 overflow-x-auto pb-4 no-scrollbar">
-          {tasks.map(task => (
-            <div key={task.id} className={`flex-shrink-0 w-48 p-4 rounded-3xl border ${task.urgent ? 'bg-red-50 border-red-100' : 'bg-white border-slate-100'} shadow-sm`}>
-              <div className="flex items-center gap-2 mb-2">
-                <span className={`w-2 h-2 rounded-full ${task.urgent ? 'bg-red-500' : 'bg-teal-500'}`} />
-                <span className={`text-[10px] font-bold uppercase ${task.urgent ? 'text-red-600' : 'text-slate-400'}`}>{task.status}</span>
-              </div>
-              <h3 className="text-xs font-bold text-slate-800 mb-1 leading-snug">{task.title}</h3>
-              <p className="text-[9px] text-slate-500 font-medium">{task.zone}</p>
-            </div>
-          ))}
-        </div>
+         <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Quick Actions</h2>
+         <div className="grid grid-cols-2 gap-4">
+            <button onClick={() => navigate('/register')} className="bg-white border-2 border-dashed border-teal-200 text-teal-700 p-5 rounded-3xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all flex flex-col items-center gap-2 shadow-sm">
+              <span className="text-3xl mb-1">📝</span>
+              Register Patient
+            </button>
+            <button onClick={() => navigate('/requests')} className="bg-white border-2 border-dashed border-slate-200 text-slate-600 p-5 rounded-3xl font-black uppercase tracking-widest text-[10px] active:scale-95 transition-all flex flex-col items-center gap-2 shadow-sm relative">
+              {metrics.pending_requests > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-black border-2 border-white shadow-sm">
+                  {metrics.pending_requests || 3}
+                </span>
+              )}
+              <span className="text-3xl mb-1">🚑</span>
+              Community Requests
+            </button>
+         </div>
       </div>
 
       {/* Priority Patient List */}
-      <div className="px-6 pb-24">
+      <div className="px-6 mb-8">
         <div className="flex items-center justify-between mb-6">
           <div className="flex flex-col">
             <h2 className="text-lg font-black text-slate-900 leading-tight">Priority Follow-ups</h2>
@@ -106,7 +105,7 @@ function Dashboard() {
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-teal-400 opacity-75"></span>
               <span className="relative inline-flex rounded-full h-2 w-2 bg-teal-500"></span>
             </span>
-            <span className="text-[10px] font-black uppercase tracking-widest">Live</span>
+            <span className="text-[10px] font-black uppercase tracking-widest">Live Sync</span>
           </div>
         </div>
 
@@ -119,7 +118,7 @@ function Dashboard() {
         ) : error ? (
           <div className="bg-amber-50 p-6 rounded-3xl border border-amber-100 text-center mb-6 shadow-sm">
             <p className="text-amber-800 text-sm font-bold mb-2">Network Error</p>
-            <p className="text-amber-700 text-xs">Could not sync with field server. Showing offline data.</p>
+            <p className="text-amber-700 text-xs">Could not sync with field server. Retrying...</p>
           </div>
         ) : null}
 
@@ -129,18 +128,21 @@ function Dashboard() {
               <div
                 key={p.id}
                 onClick={() => navigate(`/patient/${p.id}`)}
-                className="bg-white p-5 rounded-[32px] shadow-xl shadow-slate-200/40 border border-slate-100 hover:border-teal-500/30 transition-all group active:scale-[0.98]"
+                className="bg-white p-5 rounded-[32px] shadow-xl shadow-slate-200/40 border border-slate-100 hover:border-teal-500/30 transition-all group active:scale-[0.98] cursor-pointer"
               >
                 <div className="flex items-start justify-between gap-4 mb-4">
                   <div className="flex gap-4">
                     <div className="w-14 h-14 bg-slate-50 rounded-2xl flex items-center justify-center text-2xl border border-slate-100 shadow-inner">
-                      {p.is_pregnant ? '🤰' : (p.age > 60 ? '👴' : '👤')}
+                      {p.type === 'maternal' ? '🤰' : (p.type === 'child' ? '👶' : (p.age > 60 ? '👴' : '👤'))}
                     </div>
                     <div>
                       <h3 className="font-black text-slate-900 text-base group-hover:text-teal-700 transition-colors">{p.name}</h3>
-                      <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider mt-0.5">{p.village} · Age {p.age}</p>
+                      <div className="flex gap-2 items-center mt-0.5">
+                         <p className="text-slate-400 text-[10px] font-bold uppercase tracking-wider">{p.village} · Age {p.age}</p>
+                         {p.type === 'maternal' && <span className="bg-pink-100 text-pink-600 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">ANC</span>}
+                         {p.type === 'child' && <span className="bg-blue-100 text-blue-600 text-[8px] font-black px-1.5 py-0.5 rounded uppercase">Child</span>}
+                      </div>
                       <div className="flex items-center gap-3 mt-2">
-                         <span className="text-[9px] font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded-md">ID: {p.id}</span>
                          <span className="text-[9px] font-bold text-slate-400">Last visit: {p.lastVisit}</span>
                       </div>
                     </div>
@@ -175,8 +177,38 @@ function Dashboard() {
           </div>
         )}
       </div>
+
+      {/* Activity Timeline */}
+      <div className="px-6 pb-8">
+        <h2 className="text-sm font-black text-slate-400 uppercase tracking-widest mb-4">Field Activity Timeline</h2>
+        <div className="bg-white rounded-[32px] p-6 border border-slate-100 shadow-sm relative overflow-hidden">
+           <div className="absolute top-0 left-10 w-0.5 h-full bg-slate-100 z-0"></div>
+           
+           <div className="space-y-6 relative z-10">
+              <div className="flex gap-4 items-start">
+                 <div className="w-8 h-8 rounded-full bg-teal-100 border-4 border-white flex items-center justify-center text-xs z-10 flex-shrink-0">✓</div>
+                 <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">10 Mins Ago</p>
+                    <p className="text-xs font-bold text-slate-800">Visit completed for <span className="text-teal-700">Lakshmi Bai</span></p>
+                 </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                 <div className="w-8 h-8 rounded-full bg-orange-100 border-4 border-white flex items-center justify-center text-xs z-10 flex-shrink-0">📷</div>
+                 <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">1 Hour Ago</p>
+                    <p className="text-xs font-bold text-slate-800">VisionCare flagged Severe Anemia for <span className="text-orange-600">Sunita Yadav</span></p>
+                 </div>
+              </div>
+              <div className="flex gap-4 items-start">
+                 <div className="w-8 h-8 rounded-full bg-red-100 border-4 border-white flex items-center justify-center text-xs z-10 flex-shrink-0">🚑</div>
+                 <div>
+                    <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest mb-0.5">3 Hours Ago</p>
+                    <p className="text-xs font-bold text-slate-800">Transport Request received from <span className="text-red-600">Meena Devi</span> (Hospital Accompaniment)</p>
+                 </div>
+              </div>
+           </div>
+        </div>
+      </div>
     </div>
   );
 }
-
-export default Dashboard;
