@@ -1,5 +1,10 @@
-````md
-# 🚑 SehatSetu — AI-Assisted Rural Healthcare Workflow Platform
+---
+
+# 🚑 SehatSetu
+
+---
+
+#  AI-Assisted Rural Healthcare Workflow Platform
 
 SehatSetu is a Proof-of-Concept healthcare workflow system designed for ASHA workers in rural India.
 
