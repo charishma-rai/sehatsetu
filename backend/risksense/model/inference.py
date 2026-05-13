@@ -203,19 +203,30 @@ class RiskSenseInference:
         patient_id = p.pop('id', None)
         patient_name = p.pop('name', None)
         
+        # Ensure all required features are present with default values
+        p_processed = {
+            'age': p.get('age', 45),
+            'diagnosis_code': p.get('diagnosis_code', 'E11'),
+            'bp_systolic': p.get('bp_systolic', 120),
+            'spo2': p.get('spo2', 98),
+            'days_since_discharge': p.get('days_since_discharge', 15),
+            'missed_visits': p.get('missed_visits', 0),
+            'medication_adherence': p.get('medication_adherence', 0.9),
+            'last_visit_gap_days': p.get('last_visit_gap_days', 30)
+        }
+        
         # Encode diagnosis if encoder available
-        if 'diagnosis_code' in p and 'diagnosis_code' in self.encoders:
+        if 'diagnosis_code' in self.encoders:
             try:
-                p['diagnosis_code'] = self.encoders['diagnosis_code'].transform([p['diagnosis_code']])[0]
+                p_processed['diagnosis_code'] = self.encoders['diagnosis_code'].transform([p_processed['diagnosis_code']])[0]
             except:
-                # If diagnosis not seen in training, use 0
-                p['diagnosis_code'] = 0
+                p_processed['diagnosis_code'] = 0
         
         # Create DataFrame with correct feature order
         features = ['age', 'diagnosis_code', 'bp_systolic', 'spo2', 
                    'days_since_discharge', 'missed_visits', 
                    'medication_adherence', 'last_visit_gap_days']
         
-        df = pd.DataFrame([p])[features]
+        df = pd.DataFrame([p_processed])[features]
         
         return df, patient_id, patient_name
